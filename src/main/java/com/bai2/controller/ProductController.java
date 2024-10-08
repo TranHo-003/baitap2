@@ -39,8 +39,8 @@ public class ProductController {
 
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request,
-                                        @RequestPart MultipartFile file) throws IOException {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, ProductRequest request,
+                                        @RequestPart("photo") MultipartFile file) throws IOException {
         return productService.updateProductById(request,file,id);
     }
 
