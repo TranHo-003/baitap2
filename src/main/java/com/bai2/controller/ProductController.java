@@ -32,9 +32,11 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> createProduct(@Valid  @RequestBody ProductRequest request, @RequestPart MultipartFile file){
-        return productService.create(request,file);
+    public ResponseEntity<?> createProduct(@Valid ProductRequest request,
+                                           @RequestPart("photo") MultipartFile file) {
+        return productService.create(request, file);
     }
+
 
     @PutMapping("/product/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request,

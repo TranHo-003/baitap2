@@ -32,4 +32,5 @@ public class Product {
     private BigDecimal stock;
 
 
+
 }
