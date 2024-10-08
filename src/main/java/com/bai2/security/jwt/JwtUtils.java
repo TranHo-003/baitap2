@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${bai2.app.jwtSecret}")
+    @Value("GBBC6n1Gr3ao7P8jrWAOnG47dAnFfeJ5kRwVHpvTp50wDF9L2cAZM2ryrcs9suf4")
     private String jwtSecret;
 
     @Value("${bai2.app.jwtExpirationMs}")
@@ -30,7 +30,7 @@ public class JwtUtils {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getEmail()))
+                .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime()  +  jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
@@ -42,7 +42,7 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    public String getEmailFromJwtToken(String token) {
+    public String getUsernameFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key()).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }

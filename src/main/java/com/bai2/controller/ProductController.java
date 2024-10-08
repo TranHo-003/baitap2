@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(value = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RequestMapping("/api/product")
 public class ProductController {
     @Autowired
@@ -32,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> createProduct(@Valid ProductRequest request,
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequest request,
                                            @RequestPart("photo") MultipartFile file) {
         return productService.create(request, file);
     }
