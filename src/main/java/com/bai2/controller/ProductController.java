@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class ProductController {
     @Autowired private FileStorageService fileStorageService;
 
     @GetMapping("/products")
+    @PreAuthorize("hasRole('ADMIN')")
     public Map<String, Object> fetchPaginationAllProducts(
             @RequestParam(value = "name", required = false) String name ,
             @RequestParam(value = "page", defaultValue = "0") Integer page ,
@@ -33,19 +35,22 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequest request,
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createProduct(@Valid ProductRequest request,
                                            @RequestPart("photo") MultipartFile file) {
         return productService.create(request, file);
     }
 
 
     @PutMapping("/product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, ProductRequest request,
                                         @RequestPart("photo") MultipartFile file) throws IOException {
         return productService.updateProductById(request,file,id);
     }
 
     @GetMapping("/images/{filename}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getProductImage(@PathVariable String filename) {
         Resource resource = fileStorageService.load(filename);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
