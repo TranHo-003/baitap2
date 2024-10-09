@@ -51,7 +51,7 @@ public class CustomerCartService {
             CartItem cartItem = new CartItem();
             cartItem.setProduct(productRepository.findById(cartItemRequest.getProductId()).orElse(null));
             cartItem.setUser(userRepository.findById(userId).orElse(null));
-            cartItem.setQuantity(cartItem.getQuantity());
+            cartItem.setQuantity(cartItemRequest.getQuantity());
             cartItemRepository.save(cartItem);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);

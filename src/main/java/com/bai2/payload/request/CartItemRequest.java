@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class CartItemRequest {
     private Long productId;
-    private Long quantity;
+    private Integer quantity;
 
 }
