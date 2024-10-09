@@ -25,15 +25,18 @@ public class ProductService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public Map<String, Object> getAllPageableProduct(String name, int page, int size) {
+    public Map<String, Object> getAllPageableProduct(String name, Integer page, Integer size) {
         try {
+            if (page == null) page = 0;
+            if (size == null) size = 10;
             List<Product> products = new ArrayList<Product>();
-            Pageable pagiantion = PageRequest.of(page,size);
+            Pageable pagination = PageRequest.of(page,size);
             Page<Product> productPage;
             if(name == null){
-                productPage = productRepository.findAll(pagiantion);
+                productPage = productRepository.findAll(pagination);
+                System.out.println(productPage);
             }else {
-                productPage = productRepository.findByNameContaining(name, pagiantion);
+                productPage = productRepository.findByNameContaining(name, pagination);
             }
             products = productPage.getContent();
 

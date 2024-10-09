@@ -20,7 +20,7 @@ import java.util.List;
 public class CartItemController {
     @Autowired private CustomerCartService customerCartService;
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResponseEntity<?> getAllByUserId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return customerCartService.getAllByUserId(userDetails.getId());
     }
@@ -32,7 +32,7 @@ public class CartItemController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return customerCartService.deleteById(id, userDetails.getId());
     }
 

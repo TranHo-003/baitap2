@@ -24,11 +24,12 @@ public class ProductController {
     @Autowired private FileStorageService fileStorageService;
 
     @GetMapping("/products")
-    public Map<String, Object> fetchPaginationAllProducts(@RequestParam(value = "page", required = false) int page,
-                                                          @RequestParam(value = "name", defaultValue = "0") String name,
-                                                          @RequestParam(value = "size", defaultValue = "4") int size)
+    public Map<String, Object> fetchPaginationAllProducts(
+            @RequestParam(value = "name", required = false) String name ,
+            @RequestParam(value = "page", defaultValue = "0") Integer page ,
+            @RequestParam(value = "size", defaultValue = "4") int size)
     {
-        return productService.getAllPageableProduct(name,page,size);
+        return productService.getAllPageableProduct(name, page, size);
     }
 
     @PostMapping("/products")
