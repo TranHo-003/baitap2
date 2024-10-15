@@ -20,7 +20,7 @@ public class SignupRequest {
     @Size(min = 6, max = 40, message = "Bạn chưa nhập password")
     private String password;
 
-    private Set<String> role;
+    private Set<String> roles;
 
 
 }
