@@ -4,26 +4,29 @@ import com.bai2.exception.ResourceNotFoundException;
 import com.bai2.model.Product;
 import com.bai2.payload.request.ProductRequest;
 import com.bai2.payload.response.MessageResponse;
+import com.bai2.repository.CartItemRepository;
 import com.bai2.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    private FileStorageService fileStorageService;
+
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
+
+    private final FileStorageService fileStorageService;
 
     public Map<String, Object> getAllPageableProduct(String name, Integer page, Integer size) {
         try {
@@ -68,12 +71,17 @@ public class ProductService {
     public ResponseEntity<?> updateProductById(ProductRequest request, MultipartFile file, Long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
 
-        int status = fileStorageService.save(file);
-        if(status != 0){
-            product.setPhoto(file.getOriginalFilename());
-        }else{
-            throw new RuntimeException("Tải ảnh thất bại");
+        if (file != null && !file.isEmpty()) {
+            int status = fileStorageService.save(file);
+            if (status != 0) {
+                product.setPhoto(file.getOriginalFilename());
+            } else {
+                throw new RuntimeException("Tải ảnh thất bại");
+            }
+        } else {
+            product.setPhoto(product.getPhoto());
         }
+
 
         if(!product.getName().equals(request.getName())){
             product.setName(request.getName());
@@ -92,11 +100,13 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
         return product;
     }
-    public ResponseEntity<?> deleteProductById(Long id){
-        if(!productRepository.existsById(id)){
+    @Transactional
+    public ResponseEntity<?> deleteProductById(Long productId){
+        if(!productRepository.existsById(productId)){
             throw new RuntimeException("Không tìm thấy sản phẩm");
         }
-        productRepository.deleteById(id);
+        cartItemRepository.deleteByProductId(productId);
+        productRepository.deleteById(productId);
         return new ResponseEntity<>(new MessageResponse("Xóa sản phẩm thành công"), HttpStatus.OK);
 
     }

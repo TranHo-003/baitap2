@@ -43,7 +43,7 @@ public class ProductController {
 
 
     @PutMapping("/product/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, ProductRequest request,
                                         @RequestPart("photo") MultipartFile file) throws IOException {
         return productService.updateProductById(request,file,id);
