@@ -11,5 +11,5 @@ public class ProductRequest {
     private String name;
 //    public String photo;
     private BigDecimal price;
-    private BigDecimal stock;
+    private Integer stock;
 }

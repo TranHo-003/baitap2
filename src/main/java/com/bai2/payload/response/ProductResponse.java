@@ -12,9 +12,9 @@ public class ProductResponse {
     private String name;
     private String photo;
     private BigDecimal price;
-    private BigDecimal stock;
+    private Integer stock;
 
-    public ProductResponse( String name, String photo, BigDecimal price, BigDecimal stock) {
+    public ProductResponse( String name, String photo, BigDecimal price, Integer stock) {
         this.name = name;
         this.photo = photo;
         this.price = price;

@@ -1,5 +1,6 @@
 package com.bai2.service;
 
+import com.bai2.exception.NotEnoughProductsInStockException;
 import com.bai2.model.CartItem;
 import com.bai2.model.Product;
 import com.bai2.payload.request.CartItemRequest;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CustomerCartService {
@@ -65,4 +67,27 @@ public class CustomerCartService {
         cartItemRepository.deleteByIdAndUserId(id,userId);
         return new ResponseEntity<>(new MessageResponse("Sản phẩm được xóa khỏi giỏ hàng"), HttpStatus.NO_CONTENT);
     }
+
+    @Transactional
+    public ResponseEntity<?> checkout(Long userId) throws NotEnoughProductsInStockException {
+        List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
+        if (cartItems.isEmpty()) {
+            return new ResponseEntity<>(new MessageResponse("Giỏ hàng trống, không thể đặt hàng"), HttpStatus.BAD_REQUEST);
+        }
+
+        for (CartItem cartItem : cartItems) {
+            Product product = productRepository.getReferenceById(cartItem.getProduct().getId());
+
+            if (product.getStock() < cartItem.getQuantity()) {
+                throw new NotEnoughProductsInStockException();
+            }
+            product.setStock(product.getStock() - cartItem.getQuantity());
+        }
+
+        productRepository.saveAll(cartItems.stream().map(CartItem::getProduct).distinct().toList());
+        cartItemRepository.deleteAll(cartItems);
+
+        return new ResponseEntity<>(new MessageResponse("Đặt hàng thành công!"), HttpStatus.OK);
+    }
+
 }

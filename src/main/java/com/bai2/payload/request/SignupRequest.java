@@ -4,23 +4,24 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
 
-import java.util.Set;
-@Data
+@Getter
 public class SignupRequest {
     @NotBlank(message = "Username không được rỗng")
-    @Size(min = 3, max = 20, message = "Bạn chưa nhập username")
+    @Size(min = 3, max = 10, message = "Username tối thiểu 3 và tối đa 10 ký tự")
     private String username;
 
-    @NotBlank(message = "email không được rỗng")
-    @Size(max = 50, message = "Bạn chưa nhập email")
+    @NotBlank(message = "Email không được rỗng")
+    @Email(message = "Email không đúng định dạng")
+    @Size(max = 50)
     private String email;
 
     @NotBlank(message = "Password không được rỗng")
-    @Size(min = 6, max = 40, message = "Bạn chưa nhập password")
+    @Size(min = 6, max = 40, message = "Password tối thiểu 6  ký tự")
     private String password;
 
-    private Set<String> roles;
+
 
 
 }

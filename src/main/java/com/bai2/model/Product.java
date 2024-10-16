@@ -29,7 +29,7 @@ public class Product {
 
     @Column(name = "stock", nullable = false)
     @DecimalMin(value = "0", message = "Số lượng tồn kho phải là số dương")
-    private BigDecimal stock;
+    private Integer stock;
 
 
 

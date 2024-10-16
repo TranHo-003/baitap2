@@ -1,7 +1,9 @@
 package com.bai2.controller;
 
+import com.bai2.exception.NotEnoughProductsInStockException;
 import com.bai2.model.CartItem;
 import com.bai2.payload.request.CartItemRequest;
+import com.bai2.payload.response.MessageResponse;
 import com.bai2.service.CustomerCartService;
 import com.bai2.service.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -37,5 +39,10 @@ public class CartItemController {
     }
 
 
+
+    @PostMapping("/checkout/{userId}")
+    public ResponseEntity<?> checkout(@PathVariable("userId") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) throws NotEnoughProductsInStockException {
+        return customerCartService.checkout(userId);
+    }
 
 }

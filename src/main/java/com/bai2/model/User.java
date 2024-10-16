@@ -48,6 +48,10 @@ public class User {
     private List<CartItem> cartItems = new ArrayList<>();
 
 
-    public User(String username, String email, String encode) {
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
+
 }
